@@ -2,6 +2,7 @@ package main //all go source files starting with package declaration
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -9,7 +10,11 @@ import (
 )
 
 func main() {
-	f, err := os.Open("myapp.log")
+	path := flag.String("path", "myapp.log", "The path to the log file that will be analyzed")
+	level := flag.String("level", "ERROR", "The level of the logs to analyze, default is ERROR, but you can change it to INFO, DEBUG or WARNING")
+	flag.Parse()
+
+	f, err := os.Open(*path)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -22,7 +27,7 @@ func main() {
 			break
 		}
 
-		if strings.Contains(s, "ERROR") {
+		if strings.Contains(s, *level) {
 			fmt.Println(s)
 		}
 	}
